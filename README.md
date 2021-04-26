@@ -16,3 +16,5 @@ but this readme have the links
 ### References
 
 - Use a pre trained tensorflow model: https://github.com/opencv/opencv/wiki/TensorFlow-Object-Detection-API
+- COCO dataset Classes: https://github.com/nightrome/cocostuff/blob/master/labels.txt
+- Cpture video from webcam camera: https://www.geeksforgeeks.org/python-opencv-capture-video-from-camera/
