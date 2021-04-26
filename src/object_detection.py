@@ -1,4 +1,5 @@
 import cv2
+from image_segmentation import image_segmentation
 
 # Global Config
 
@@ -48,9 +49,10 @@ def detect_objects_in_image(image):
             )
 
 
-def show_images(image, image_in_greyscale):
+def show_images(image, image_in_greyscale, image_segmentated):
     cv2.imshow("Full RGB", image)
     cv2.imshow("GryScale", image_in_greyscale)
+    cv2.imshow("Image Segmentaded", image_segmentated)
 
 
 def exit_key_pressed():
@@ -59,8 +61,9 @@ def exit_key_pressed():
 
 def get_webcam_image():
     success, image = webcam_video.read()
-    image_in_greyscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return image, image_in_greyscale
+    success, image_for_segmentation = webcam_video.read()
+
+    return image, image_for_segmentation
 
 
 # Main Program
@@ -75,8 +78,16 @@ with open(classFile, "rt") as f:
 detection_model = create_detection_model()
 
 while exit_key_pressed():
-    image, image_in_greyscale = get_webcam_image()
+    image, image_for_segmentation = get_webcam_image()
 
     detect_objects_in_image(image=image)
+    image_segmentation(image_for_segmentation)
 
-    show_images(image=image, image_in_greyscale=image_in_greyscale)
+    show_images(
+        image=image,
+        image_in_greyscale=image,
+        image_segmentated=image_for_segmentation,
+    )
+
+webcam_video.release()
+cv2.destroyAllWindows()

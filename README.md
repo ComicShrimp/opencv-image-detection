@@ -19,3 +19,4 @@ but this readme have the links
 - COCO dataset Classes: https://github.com/nightrome/cocostuff/blob/master/labels.txt
 - Cpture video from webcam camera: https://www.geeksforgeeks.org/python-opencv-capture-video-from-camera/
 - Webcam Video to GreyScale: https://techtutorialsx.com/2019/04/13/python-opencv-converting-webcam-video-to-gray-scale/
+- Image Segmetation: https://automaticaddison.com/how-to-detect-and-draw-contours-in-images-using-opencv/
