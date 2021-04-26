@@ -26,7 +26,11 @@ def create_detection_model():
     return detection_model
 
 
-def set_boundary_box_in_image(image):
+def detect_objects_in_image(image):
+    class_ids, configurations, boundary_box = detection_model.detect(
+        image, confThreshold=confidence_threshold
+    )
+
     if len(class_ids) != 0:
         for classId, confidence, object_box in zip(
             class_ids.flatten(), configurations.flatten(), boundary_box
@@ -44,18 +48,19 @@ def set_boundary_box_in_image(image):
             )
 
 
-def show_images(image):
+def show_images(image, image_in_greyscale):
     cv2.imshow("Full RGB", image)
-    cv2.imshow("GryScale", image)
+    cv2.imshow("GryScale", image_in_greyscale)
 
 
 def exit_key_pressed():
     return not cv2.waitKey(1) & 0xFF == ord("q")
 
 
-def get_webcam_frame():
+def get_webcam_image():
     success, image = webcam_video.read()
-    return image
+    image_in_greyscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    return image, image_in_greyscale
 
 
 # Main Program
@@ -70,11 +75,8 @@ with open(classFile, "rt") as f:
 detection_model = create_detection_model()
 
 while exit_key_pressed():
-    image = get_webcam_frame()
-    class_ids, configurations, boundary_box = detection_model.detect(
-        image, confThreshold=confidence_threshold
-    )
+    image, image_in_greyscale = get_webcam_image()
 
-    set_boundary_box_in_image(image=image)
+    detect_objects_in_image(image=image)
 
-    show_images(image=image)
+    show_images(image=image, image_in_greyscale=image_in_greyscale)
