@@ -1,5 +1,6 @@
 import cv2
-from image_segmentation import image_segmentation
+from segmentation import image_segmentation
+from filters import sepia
 
 # Global Config
 
@@ -19,7 +20,7 @@ classFile = "src/lib/coco.names"
 def create_detection_model():
     detection_model = cv2.dnn_DetectionModel(weightsPath, configPath)
 
-    detection_model.setInputSize(360, 360)
+    detection_model.setInputSize(320, 320)
     detection_model.setInputScale(1.0 / 120)
     detection_model.setInputMean((120, 120, 120))
     detection_model.setInputSwapRB(True)
@@ -28,17 +29,19 @@ def create_detection_model():
 
 
 def detect_objects_in_image(image):
+    image_for_objects = image.copy()
+
     class_ids, configurations, boundary_box = detection_model.detect(
-        image, confThreshold=confidence_threshold
+        image_for_objects, confThreshold=confidence_threshold
     )
 
     if len(class_ids) != 0:
         for classId, confidence, object_box in zip(
             class_ids.flatten(), configurations.flatten(), boundary_box
         ):
-            cv2.rectangle(image, object_box, color=rgb_color, thickness=2)
+            cv2.rectangle(image_for_objects, object_box, color=rgb_color, thickness=2)
             cv2.putText(
-                image,
+                image_for_objects,
                 f"%s - %s"
                 % (class_names[classId - 1].upper(), round(confidence * 100, 2)),
                 (object_box[0] + 10, object_box[1] + 20),
@@ -47,11 +50,15 @@ def detect_objects_in_image(image):
                 rgb_color,
                 2,
             )
+    return image_for_objects
 
 
-def show_images(image, image_in_greyscale, image_segmentated):
-    cv2.imshow("Full RGB", image)
-    cv2.imshow("GryScale", image_in_greyscale)
+def show_images(
+    image_with_objects, image_in_greyscale, image_in_filter, image_segmentated
+):
+    cv2.imshow("Full RGB", image_with_objects)
+    cv2.imshow("GreyScale", image_in_greyscale)
+    cv2.imshow("Filter", image_in_filter)
     cv2.imshow("Image Segmentaded", image_segmentated)
 
 
@@ -61,9 +68,8 @@ def exit_key_pressed():
 
 def get_webcam_image():
     success, image = webcam_video.read()
-    success, image_for_segmentation = webcam_video.read()
 
-    return image, image_for_segmentation
+    return image
 
 
 # Main Program
@@ -78,14 +84,16 @@ with open(classFile, "rt") as f:
 detection_model = create_detection_model()
 
 while exit_key_pressed():
-    image, image_for_segmentation = get_webcam_image()
+    image = get_webcam_image()
 
-    detect_objects_in_image(image=image)
-    image_segmentation(image_for_segmentation)
+    image_with_objects = detect_objects_in_image(image)
+    image_for_segmentation = image_segmentation(image)
+    image_in_filter = detect_objects_in_image(sepia(image))
 
     show_images(
-        image=image,
+        image_with_objects=image_with_objects,
         image_in_greyscale=image,
+        image_in_filter=image_in_filter,
         image_segmentated=image_for_segmentation,
     )
 

@@ -19,4 +19,6 @@ but this readme have the links
 - COCO dataset Classes: https://github.com/nightrome/cocostuff/blob/master/labels.txt
 - Cpture video from webcam camera: https://www.geeksforgeeks.org/python-opencv-capture-video-from-camera/
 - Webcam Video to GreyScale: https://techtutorialsx.com/2019/04/13/python-opencv-converting-webcam-video-to-gray-scale/
-- Image Segmetation: https://automaticaddison.com/how-to-detect-and-draw-contours-in-images-using-opencv/
+- Detect objects with greyscale: https://debuggercafe.com/moving-object-detection-using-frame-differencing-with-opencv/
+- Find borders of objects: https://automaticaddison.com/how-to-detect-and-draw-contours-in-images-using-opencv/
+- Apply Filter in Image: https://learnopencv.com/photoshop-filters-in-opencv/
