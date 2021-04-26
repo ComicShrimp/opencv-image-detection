@@ -15,6 +15,8 @@ but this readme have the links
 
 ### References
 
+#### Object recognition
+
 - Use a pre trained tensorflow model: https://github.com/opencv/opencv/wiki/TensorFlow-Object-Detection-API
 - COCO dataset Classes: https://github.com/nightrome/cocostuff/blob/master/labels.txt
 - Cpture video from webcam camera: https://www.geeksforgeeks.org/python-opencv-capture-video-from-camera/
@@ -22,3 +24,7 @@ but this readme have the links
 - Detect objects with greyscale: https://debuggercafe.com/moving-object-detection-using-frame-differencing-with-opencv/
 - Find borders of objects: https://automaticaddison.com/how-to-detect-and-draw-contours-in-images-using-opencv/
 - Apply Filter in Image: https://learnopencv.com/photoshop-filters-in-opencv/
+
+#### Semantic segmentation
+
+- Pre trained semantic segmentation: https://github.com/leimao/DeepLab-V3

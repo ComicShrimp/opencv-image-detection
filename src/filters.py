@@ -2,20 +2,26 @@ import cv2
 import numpy as np
 
 
-def sepia(img):
-    res = img.copy()
-    res = cv2.cvtColor(
-        res, cv2.COLOR_BGR2RGB
-    )  # converting to RGB as sepia matrix is for RGB
-    res = np.array(res, dtype=np.float64)
-    res = cv2.transform(
-        res,
+def sepia(image):
+    image_with_sepia = image.copy()
+    image_with_sepia = cv2.cvtColor(image_with_sepia, cv2.COLOR_BGR2RGB)
+    image_with_sepia = np.array(image_with_sepia, dtype=np.float64)
+    image_with_sepia = cv2.transform(
+        image_with_sepia,
         np.matrix(
             [[0.393, 0.769, 0.189], [0.349, 0.686, 0.168], [0.272, 0.534, 0.131]]
         ),
     )
-    res[np.where(res > 255)] = 255  # clipping values greater than 255 to 255
-    res = np.array(res, dtype=np.uint8)
-    res = cv2.cvtColor(res, cv2.COLOR_RGB2BGR)
+    image_with_sepia[
+        np.where(image_with_sepia > 255)
+    ] = 255  # clipping values greater than 255 to 255
+    image_with_sepia = np.array(image_with_sepia, dtype=np.uint8)
+    image_with_sepia = cv2.cvtColor(image_with_sepia, cv2.COLOR_RGB2BGR)
 
-    return res
+    return image_with_sepia
+
+
+def greyscale(image):
+    image_in_greyscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    return image_in_greyscale
