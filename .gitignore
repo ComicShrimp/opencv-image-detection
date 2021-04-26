@@ -1,1 +1,4 @@
 .vscode
+trained_model
+__pycache__
+trained_config.pbtxt
