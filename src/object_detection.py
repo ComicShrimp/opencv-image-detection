@@ -1,5 +1,4 @@
 import cv2
-from segmentation import image_segmentation
 from filters import sepia, greyscale
 
 # Global Config
@@ -53,13 +52,10 @@ def detect_objects_in_image(image):
     return image_for_objects
 
 
-def show_images(
-    image_with_objects, image_in_greyscale, image_in_filter, image_segmentated
-):
+def show_images(image_with_objects, image_in_greyscale, image_in_filter):
     cv2.imshow("Full RGB", image_with_objects)
     cv2.imshow("GreyScale", image_in_greyscale)
     cv2.imshow("Filter", image_in_filter)
-    cv2.imshow("Image Segmentaded", image_segmentated)
 
 
 def exit_key_pressed():
@@ -89,13 +85,11 @@ while exit_key_pressed():
     image_with_objects = detect_objects_in_image(image)
     image_in_filter_grey = detect_objects_in_image(greyscale(image))
     image_in_filter_sepia = detect_objects_in_image(sepia(image))
-    image_for_segmentation = image_segmentation(image)
 
     show_images(
         image_with_objects=image_with_objects,
-        image_in_greyscale=image,
+        image_in_greyscale=image_in_filter_grey,
         image_in_filter=image_in_filter_sepia,
-        image_segmentated=image_for_segmentation,
     )
 
 webcam_video.release()

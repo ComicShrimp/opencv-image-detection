@@ -24,4 +24,4 @@ def sepia(image):
 def greyscale(image):
     image_in_greyscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    return image_in_greyscale
+    return cv2.merge([image_in_greyscale, image_in_greyscale, image_in_greyscale])
