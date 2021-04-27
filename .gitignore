@@ -3,3 +3,5 @@ trained_model
 __pycache__
 trained_config.pbtxt
 enet-model.net
+images
+video

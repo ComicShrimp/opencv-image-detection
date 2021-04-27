@@ -8,17 +8,13 @@ import argparse
 import imutils
 import time
 import cv2
+from filters import sepia, greyscale
+
+width = 500
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument(
-    "-m", "--model", required=True, help="path to deep learning segmentation model"
-)
-ap.add_argument(
-    "-c", "--classes", required=True, help="path to .txt file containing class labels"
-)
-ap.add_argument("-v", "--video", required=True, help="path to input video file")
-ap.add_argument("-o", "--output", required=True, help="path to output video file")
+
 ap.add_argument(
     "-s",
     "--show",
@@ -39,30 +35,28 @@ ap.add_argument(
 args = vars(ap.parse_args())
 
 # load the class label names
-CLASSES = open(args["classes"]).read().strip().split("\n")
+CLASSES = open("src/lib/enet-cityscapes/enet-classes.txt").read().strip().split("\n")
 
-# if a colors file was supplied, load it from disk
-if args["colors"]:
-    COLORS = open(args["colors"]).read().strip().split("\n")
-    COLORS = [np.array(c.split(",")).astype("int") for c in COLORS]
-    COLORS = np.array(COLORS, dtype="uint8")
+COLORS = open("src/lib/enet-cityscapes/enet-colors.txt").read().strip().split("\n")
+COLORS = [np.array(c.split(",")).astype("int") for c in COLORS]
+COLORS = np.array(COLORS, dtype="uint8")
 
-# otherwise, we need to randomly generate RGB colors for each class
-# label
-else:
-    # initialize a list of colors to represent each class label in
-    # the mask (starting with 'black' for the background/unlabeled
-    # regions)
-    np.random.seed(42)
-    COLORS = np.random.randint(0, 255, size=(len(CLASSES) - 1, 3), dtype="uint8")
-    COLORS = np.vstack([[0, 0, 0], COLORS]).astype("uint8")
+# # otherwise, we need to randomly generate RGB colors for each class
+# # label
+# else:
+#     # initialize a list of colors to represent each class label in
+#     # the mask (starting with 'black' for the background/unlabeled
+#     # regions)
+#     np.random.seed(42)
+#     COLORS = np.random.randint(0, 255, size=(len(CLASSES) - 1, 3), dtype="uint8")
+#     COLORS = np.vstack([[0, 0, 0], COLORS]).astype("uint8")
 
 # load our serialized model from disk
 print("[INFO] loading model...")
-net = cv2.dnn.readNet(args["model"])
+net = cv2.dnn.readNet("src/lib/enet-cityscapes/enet-model.net")
 
 # initialize the video stream and pointer to output video file
-vs = cv2.VideoCapture(args["video"])
+vs = cv2.VideoCapture("src/lib/video/video_rua_cortado.mp4")
 writer = None
 
 # try to determine the total number of frames in the video file
@@ -83,6 +77,8 @@ except:
 while True:
     # read the next frame from the file
     (grabbed, frame) = vs.read()
+
+    frame = sepia(frame)
 
     # if the frame was not grabbed, then we have reached the end
     # of the stream
@@ -129,7 +125,11 @@ while True:
         # initialize our video writer
         fourcc = cv2.VideoWriter_fourcc(*"MJPG")
         writer = cv2.VideoWriter(
-            args["output"], fourcc, 30, (output.shape[1], output.shape[0]), True
+            "src/lib/video/video_saida_sepia.mp4",
+            fourcc,
+            30,
+            (output.shape[1], output.shape[0]),
+            True,
         )
 
         # some information on processing single frame
@@ -141,14 +141,6 @@ while True:
     # write the output frame to disk
     writer.write(output)
 
-    # check to see if we should display the output frame to our screen
-    if args["show"] > 0:
-        cv2.imshow("Frame", output)
-        key = cv2.waitKey(1) & 0xFF
-
-        # if the `q` key was pressed, break from the loop
-        if key == ord("q"):
-            break
 
 # release the file pointers
 print("[INFO] cleaning up...")
