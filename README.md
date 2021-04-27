@@ -27,4 +27,6 @@ but this readme have the links
 
 #### Semantic segmentation
 
-- Pre trained semantic segmentation: https://github.com/leimao/DeepLab-V3
+- Semantic code example: https://www.pyimagesearch.com/2018/09/03/semantic-segmentation-with-opencv-and-deep-learning/
+- Semantic segmentation example: https://github.com/simogasp/opencv-semantic-segmentation
+- Semantic trained models: https://www.cityscapes-dataset.com
